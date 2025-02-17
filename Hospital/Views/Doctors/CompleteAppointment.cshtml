@@ -1,0 +1,81 @@
+﻿
+
+<h1>Complete Appointment with @Model.Name</h1>
+
+<form id="appointmentForm" method="post" action="/Doctors/CompleteAppointment">
+    <input type="hidden" name="DoctorId" value="@Model.Id" />
+    <div class="form-group">
+        <label for="patientName">Patient Name:</label>
+        <input type="text" class="form-control" id="patientName" name="patientName" required>
+    </div>
+    <div class="form-group">
+        <label for="appointmentDate">Appointment Date:</label>
+        <input type="date" class="form-control" id="appointmentDate" name="appointmentDate" required>
+    </div>
+    <div class="form-group">
+        <label for="appointmentTime">Appointment Time:</label>
+        <input type="time" class="form-control" id="appointmentTime" name="appointmentTime" required>
+    </div>
+    <br />
+    
+    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+    <button type="submit" class="btn btn-primary" id="submitBtn">Complete Appointment</button>
+</form>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successModalLabel">Appointment Completed</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Your appointment has been successfully completed. Thank you!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var appointmentForm = document.getElementById('appointmentForm');
+        var errorMessage = document.getElementById('errorMessage');
+
+        appointmentForm.addEventListener('submit', function (e) {
+            
+            var appointmentDate = document.getElementById('appointmentDate').value;
+            var appointmentTime = document.getElementById('appointmentTime').value;
+
+            
+            var selectedDateTime = new Date(appointmentDate + 'T' + appointmentTime);
+            var currentDateTime = new Date();
+
+            
+            if (selectedDateTime <= currentDateTime) {
+                
+                errorMessage.innerText = 'Appointment date and time must be in the future.';
+                errorMessage.style.display = 'block';
+                e.preventDefault(); 
+            } else {
+                
+                errorMessage.style.display = 'none';
+
+               
+                var myModal = new bootstrap.Modal(document.getElementById('successModal'), {
+                    backdrop: 'static',
+                    keyboard: false
+                });
+                myModal.show();
+
+                
+                e.preventDefault();
+
+                
+                setTimeout(function () {
+                    appointmentForm.submit();
+                }, 3000); 
+            }
+        });
+    });
+</script>
